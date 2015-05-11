@@ -1,0 +1,5 @@
+\\vmware-host\shared folders\Documenti\Visual Studio 2013\Projects\CollectiveIntelligenceSamples\CollectiveIntelligence.Core\bin\Debug\CollectiveIntelligence.Core.dll
+\\vmware-host\shared folders\Documenti\Visual Studio 2013\Projects\CollectiveIntelligenceSamples\CollectiveIntelligence.Core\bin\Debug\CollectiveIntelligence.Core.pdb
+\\vmware-host\shared folders\Documenti\Visual Studio 2013\Projects\CollectiveIntelligenceSamples\CollectiveIntelligence.Core\obj\Debug\CollectiveIntelligence.Core.csprojResolveAssemblyReference.cache
+\\vmware-host\shared folders\Documenti\Visual Studio 2013\Projects\CollectiveIntelligenceSamples\CollectiveIntelligence.Core\obj\Debug\CollectiveIntelligence.Core.dll
+\\vmware-host\shared folders\Documenti\Visual Studio 2013\Projects\CollectiveIntelligenceSamples\CollectiveIntelligence.Core\obj\Debug\CollectiveIntelligence.Core.pdb
