@@ -1,11 +1,7 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CollectiveIntelligence.Core.Common;
 
 namespace CollectiveIntelligence.Core
 {
@@ -24,14 +20,11 @@ namespace CollectiveIntelligence.Core
                 return 0;
             }
 
-            var powOfDiffs = sharedItems.Select(
+            var sumOfSquares = sharedItems.Select(
                 si =>
                     Math.Pow(person1Prefs.First(pref => pref._entity == si.Key)._score -
-                             person2Prefs.First(pref => pref._entity == si.Key)._score, 2));
-
-            var sumOfSquares =
-                powOfDiffs.Sum();
-
+                             person2Prefs.First(pref => pref._entity == si.Key)._score, 2)).Sum();
+            
             return 1/(1 + Math.Sqrt(sumOfSquares));
 
         }
@@ -126,6 +119,42 @@ namespace CollectiveIntelligence.Core
                 _entity = entity;
                 _person = person;
             }
+        }
+    }
+
+    public static class Similarity<TEntity, TItem>
+    {
+        public static double GetEuclideanDistance(Dictionary<TEntity, Dictionary<TItem, double>> preferences,
+    TEntity entity1, TEntity entity2)
+        {
+            if (preferences == null)
+            {
+                throw new ArgumentNullException("preferences");
+            }
+
+            if (entity1 == null)
+            {
+                throw new ArgumentNullException("entity1");
+            }
+
+            if (entity2 == null)
+            {
+                throw new ArgumentNullException("entity2");
+            }
+
+            if (!preferences.ContainsKey(entity1) || !preferences.ContainsKey(entity2))
+            {
+                return 0;
+            }
+
+            var similarities = preferences[entity1].Where(pref => preferences[entity2].ContainsKey(pref.Key)).Select(pair => pair.Key).ToArray();
+            if (!similarities.Any())
+            {
+                return 0;
+            }
+
+            var sumOfSquares = similarities.Select(sim => Math.Pow(preferences[entity1][sim] - preferences[entity2][sim], 2)).Sum();
+            return 1/(1 + Math.Sqrt(sumOfSquares));
         }
     }
 }
