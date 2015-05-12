@@ -1,7 +1,0 @@
-\\vmware-host\shared folders\Documenti\Visual Studio 2013\Projects\CollectiveIntelligenceSamples\CollectiveIntelligence.Core.Tests\obj\Debug\CollectiveIntelligence.Core.Tests.csprojResolveAssemblyReference.cache
-\\vmware-host\shared folders\Documenti\Visual Studio 2013\Projects\CollectiveIntelligenceSamples\CollectiveIntelligence.Core.Tests\bin\Debug\CollectiveIntelligence.Core.Tests.dll
-\\vmware-host\shared folders\Documenti\Visual Studio 2013\Projects\CollectiveIntelligenceSamples\CollectiveIntelligence.Core.Tests\bin\Debug\CollectiveIntelligence.Core.Tests.pdb
-\\vmware-host\shared folders\Documenti\Visual Studio 2013\Projects\CollectiveIntelligenceSamples\CollectiveIntelligence.Core.Tests\bin\Debug\nunit.framework.dll
-\\vmware-host\shared folders\Documenti\Visual Studio 2013\Projects\CollectiveIntelligenceSamples\CollectiveIntelligence.Core.Tests\bin\Debug\nunit.framework.xml
-\\vmware-host\shared folders\Documenti\Visual Studio 2013\Projects\CollectiveIntelligenceSamples\CollectiveIntelligence.Core.Tests\obj\Debug\CollectiveIntelligence.Core.Tests.dll
-\\vmware-host\shared folders\Documenti\Visual Studio 2013\Projects\CollectiveIntelligenceSamples\CollectiveIntelligence.Core.Tests\obj\Debug\CollectiveIntelligence.Core.Tests.pdb
