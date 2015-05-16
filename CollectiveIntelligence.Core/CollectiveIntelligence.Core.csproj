@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Maybe.cs" />
+    <Compile Include="ISimilarity.cs" />
+    <Compile Include="Obsolete\Similarity.cs" />
     <Compile Include="Similarity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
