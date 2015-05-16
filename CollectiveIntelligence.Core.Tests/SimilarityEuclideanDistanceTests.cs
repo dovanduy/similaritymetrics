@@ -101,7 +101,7 @@ namespace CollectiveIntelligence.Core.Tests
                 {entity1, entity1Preferences},
                 {entity2, entity2Preferences}
             };
-            var result = Similarity<string, string>.GetEuclideanDistance(preferences, entity1, entity2);
+            var result = Similarity<string, string>.GetSimilarity(preferences, entity1, entity2, Similarity<string, string>.GetEuclideanDistance);
 
             Assert.AreEqual(result, 0.29429805508554946);
         }
@@ -130,7 +130,7 @@ namespace CollectiveIntelligence.Core.Tests
                 {entity1, entity1Preferences},
                 {entity2, entity2Preferences}
             };
-            var result = Similarity<string, string>.GetEuclideanDistance(preferences, entity1, entity2);
+            var result = Similarity<string, string>.GetSimilarity(preferences, entity1, entity2, Similarity<string, string>.GetEuclideanDistance);
 
             Assert.AreEqual(result, 0);
         }
@@ -169,9 +169,38 @@ namespace CollectiveIntelligence.Core.Tests
                 {entity1, entity1Preferences},
                 {entity2, entity2Preferences}
             };
-            var result = Similarity<string, string>.GetPearsonCorrelation(preferences, entity1, entity2);
+            var result = Similarity<string, string>.GetSimilarity(preferences, entity1, entity2, Similarity<string, string>.GetPearsonCorrelation);
 
             Assert.AreEqual(Math.Round(result, 12), 0.396059017191);
+        }
+
+        [Test]
+        public void Generic_Should_Return_Zero_Pearson_Correlation_When_People_Have_Common_Preferences()
+        {
+            const string entity1 = "Lisa Rose";
+            const string entity2 = "Gene Seymour";
+
+            var entity1Preferences = new Dictionary<string, double>
+            {
+                {"Lady in the Water", 2.5},
+                {"Snakes on a Plane", 3.5},
+                {"Just My Luck", 3.0}
+            };
+            var entity2Preferences = new Dictionary<string, double>            
+            {
+                {"Superman Returns", 5},
+                {"You, Me and Dupree", 3.5},
+                {"The Night Listener", 3.0}
+            };
+
+            var preferences = new Dictionary<string, Dictionary<string, double>>
+            {
+                {entity1, entity1Preferences},
+                {entity2, entity2Preferences}
+            };
+            var result = Similarity<string, string>.GetSimilarity(preferences, entity1, entity2, Similarity<string, string>.GetPearsonCorrelation);
+
+            Assert.AreEqual(result, 0);
         }
     }
 }

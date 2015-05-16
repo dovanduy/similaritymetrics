@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace CollectiveIntelligence.Core
 {
@@ -127,21 +128,28 @@ namespace CollectiveIntelligence.Core
         public static double GetEuclideanDistance(Dictionary<TEntity, Dictionary<TItem, double>> preferences,
     TEntity entity1, TEntity entity2)
         {
-            if (preferences == null)
+            if (!preferences.ContainsKey(entity1) || !preferences.ContainsKey(entity2))
             {
-                throw new ArgumentNullException("preferences");
+                return 0;
             }
 
-            if (entity1 == null)
+            var similarities = Similarity<TEntity, TItem>.GetSimilaritiesCollection(preferences, entity1, entity2).ToArray();
+            if (!similarities.Any())
             {
-                throw new ArgumentNullException("entity1");
+                return 0;
             }
 
-            if (entity2 == null)
-            {
-                throw new ArgumentNullException("entity2");
-            }
+            var sumOfSquares = similarities.Select(sim => Math.Pow(preferences[entity1][sim] - preferences[entity2][sim], 2)).Sum();
+            return 1/(1 + Math.Sqrt(sumOfSquares));
+        }
 
+        private static IEnumerable<TItem> GetSimilaritiesCollection(Dictionary<TEntity, Dictionary<TItem, double>> preferences, TEntity entity1, TEntity entity2)
+        {
+            return preferences[entity1].Where(pref => preferences[entity2].ContainsKey(pref.Key)).Select(pair => pair.Key);
+        }
+
+        public static double GetPearsonCorrelation(Dictionary<TEntity, Dictionary<TItem, double>> preferences, TEntity entity1, TEntity entity2)
+        {
             if (!preferences.ContainsKey(entity1) || !preferences.ContainsKey(entity2))
             {
                 return 0;
@@ -152,12 +160,38 @@ namespace CollectiveIntelligence.Core
             {
                 return 0;
             }
+            var similaritiesCount = similarities.Count();
 
-            var sumOfSquares = similarities.Select(sim => Math.Pow(preferences[entity1][sim] - preferences[entity2][sim], 2)).Sum();
-            return 1/(1 + Math.Sqrt(sumOfSquares));
+            // Add up all the preferences
+            var sum1 = similarities.Select(sim => preferences[entity1][sim]).Sum();
+            var sum2 = similarities.Select(sim => preferences[entity2][sim]).Sum();
+
+
+            // Sum up the squares
+            var sumOfSquares1 = similarities.Select(sim => Math.Pow(preferences[entity1][sim], 2)).Sum();
+            var sumOfSquares2 = similarities.Select(sim => Math.Pow(preferences[entity2][sim], 2)).Sum();
+
+
+            // Sum up the products
+            var sumOfProducts = similarities.Select(sim => preferences[entity1][sim]*preferences[entity2][sim]).Sum();
+
+            // Calculate Pearson Correlation Coefficient
+            var numerator = sumOfProducts - (sum1*sum2)/similaritiesCount;
+            var denominator =
+                Math.Sqrt((sumOfSquares1 - Math.Pow(sum1, 2)/similaritiesCount)*
+                          (sumOfSquares2 - Math.Pow(sum2, 2)/similaritiesCount));
+
+            if (denominator == 0)
+            {
+                return 0;
+            }
+
+            return numerator/denominator;
         }
 
-        public static double GetPearsonCorrelation(Dictionary<TEntity, Dictionary<TItem, double>> preferences, TEntity entity1, TEntity entity2)
+        public static double GetSimilarity(Dictionary<TEntity, Dictionary<TItem, double>> preferences, TEntity entity1,
+            TEntity entity2,
+            Func<Dictionary<TEntity, Dictionary<TItem, double>>, TEntity, TEntity, double> metricFunc)
         {
             if (preferences == null)
             {
@@ -174,57 +208,7 @@ namespace CollectiveIntelligence.Core
                 throw new ArgumentNullException("entity2");
             }
 
-            if (!preferences.ContainsKey(entity1) || !preferences.ContainsKey(entity2))
-            {
-                return 0;
-            }
-
-            var similarities = preferences[entity1].Where(pref => preferences[entity2].ContainsKey(pref.Key)).Select(pair => pair.Key).ToArray();
-            if (!similarities.Any())
-            {
-                return 0;
-            }
-            var similaritiesCount = similarities.Count();
-
-            // Add up all the preferences
-            //  sum1=sum([prefs[p1][it] for it in si])
-            //  sum2=sum([prefs[p2][it] for it in si])
-
-            var sum1 = similarities.Select(sim => preferences[entity1][sim]).Sum();
-            var sum2 = similarities.Select(sim => preferences[entity2][sim]).Sum();
-
-
-            //  # Sum up the squares
-            //  sum1Sq=sum([pow(prefs[p1][it],2) for it in si])
-            //  sum2Sq=sum([pow(prefs[p2][it],2) for it in si])
-
-            var sumOfSquares1 = similarities.Select(sim => Math.Pow(preferences[entity1][sim], 2)).Sum();
-            var sumOfSquares2 = similarities.Select(sim => Math.Pow(preferences[entity2][sim], 2)).Sum();
-
-
-            //  # Sum up the products
-            //  pSum=sum([prefs[p1][it]*prefs[p2][it] for it in si])
-
-            var sumOfProducts = similarities.Select(sim => preferences[entity1][sim]*preferences[entity2][sim]).Sum();
-
-            //  # Calculate Pearson scorenum=pSum−(sum1*sum2/n)
-            //  den=sqrt((sum1Sq−pow(sum1,2)/n)*(sum2Sq−pow(sum2,2)/n))
-            //  if den==0: return 0
-            //  r=num/den”
-
-            var numerator = sumOfProducts - (sum1*sum2)/similaritiesCount;
-            var denominator =
-                Math.Sqrt((sumOfSquares1 - Math.Pow(sum1, 2)/similaritiesCount)*
-                          (sumOfSquares2 - Math.Pow(sum2, 2)/similaritiesCount));
-
-            if (denominator == 0)
-            {
-                return 0;
-            }
-
-            return numerator/denominator;
-
-            //Excerpt From: Toby Segaran. “Programming Collective Intelligence.” iBooks. 
+            return metricFunc(preferences, entity1, entity2);
         }
     }
 }
