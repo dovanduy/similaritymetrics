@@ -55,7 +55,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="SimilarityTest.cs" />
+    <Compile Include="SimilarityEuclideanDistanceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
