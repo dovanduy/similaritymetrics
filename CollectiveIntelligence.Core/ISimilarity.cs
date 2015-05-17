@@ -11,8 +11,7 @@ namespace CollectiveIntelligence.Core
         double GetPearsonCorrelation(Dictionary<TEntity, Dictionary<TItem, double>> preferences, TEntity entity1,
             TEntity entity2);
 
-        double GetSimilarity(Dictionary<TEntity, Dictionary<TItem, double>> preferences, TEntity entity1,
-            TEntity entity2,
-            Func<Dictionary<TEntity, Dictionary<TItem, double>>, TEntity, TEntity, double> metricFunc);
+        SortedDictionary<double, TEntity> TopMatches(Dictionary<TEntity, Dictionary<TItem, double>> preferences, TEntity entity,
+            int limit, Func<Dictionary<TEntity, Dictionary<TItem, double>>, TEntity, TEntity, double> metricFunc);
     }
 }

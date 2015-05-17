@@ -100,11 +100,23 @@ namespace CollectiveIntelligence.Core
             return numerator/denominator;
         }
 
-        public double GetSimilarity(Dictionary<TEntity, Dictionary<TItem, double>> preferences, TEntity entity1,
-            TEntity entity2,
-            Func<Dictionary<TEntity, Dictionary<TItem, double>>, TEntity, TEntity, double> metricFunc)
+        public SortedDictionary<double, TEntity> TopMatches(Dictionary<TEntity, Dictionary<TItem, double>> preferences, TEntity entity,
+            int limit, Func<Dictionary<TEntity, Dictionary<TItem, double>>, TEntity, TEntity, double> metricFunc)
         {
-            return metricFunc(preferences, entity1, entity2);
+            var result = new SortedDictionary<double, TEntity>(new DescendingCompare<double>());
+            foreach (var currentEntity in preferences.Select(currentEntityItems => currentEntityItems.Key).Where(currentEntity => !currentEntity.Equals(entity)).Where(currentEntity => result.Count < limit))
+            {
+                result.Add(metricFunc(preferences, entity, currentEntity), currentEntity);
+            }
+            return result;
         }
     }
+
+    public class DescendingCompare<T> : Comparer<T> where T : IComparable<T>
+    {
+        public override int Compare(T x, T y)
+        {
+            return y == null ? 1 : y.CompareTo(x);
+        }
+    } 
 }
